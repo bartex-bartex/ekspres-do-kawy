@@ -3,7 +3,7 @@
 ## Autorzy
 
 - Bartosz Warchoł, bwarchol@student.agh.edu.pl
-- Piotr Waluszek, [email]
+- Piotr Waluszek, waluszekp@student.agh.edu.pl
 
 ## Opis projektu
 
