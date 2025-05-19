@@ -1,0 +1,220 @@
+package coffee_machine
+public
+  with Base_Types;
+  with Data_Model;
+
+  -- ==== DATA ====
+  data Beverage
+    properties
+      Data_Model::Data_Representation => Struct;
+  end Beverage;
+
+  data CoffeeType
+    properties
+      Data_Model::Data_Representation => Enum;
+  end CoffeeType;
+
+  data CoffeeAmount
+    properties
+      Data_Model::Data_Representation => Integer;
+  end CoffeeAmount;
+
+  data CoffeeStrength
+    properties
+      Data_Model::Data_Representation => Enum;
+  end CoffeeStrength;
+
+  data FoamDensity
+    properties
+      Data_Model::Data_Representation => Enum;
+  end FoamDensity;
+
+  -- ==== DEVICES ====
+  device WaterPump
+    features
+      water_cmd: in data port Base_Types::Integer;
+  end WaterPump;
+
+  device CoffeeDispenser
+    features
+      coffee_cmd: in data port Base_Types::Integer;
+  end CoffeeDispenser;
+
+  device CoffeeGrinder
+    features
+      grind_cmd: in data port Base_Types::Integer;
+  end CoffeeGrinder;
+
+  device MilkDispenser
+    features
+      milk_cmd: in data port Base_Types::Integer;
+  end MilkDispenser;
+
+  device MilkFrother
+    features
+      froth_cmd: in data port Base_Types::Integer;
+  end MilkFrother;
+
+  device Heater
+    features
+      heat_cmd: in data port Base_Types::Integer;
+  end Heater;
+
+  device TemperatureSensor
+    features
+      temp_out: out data port Base_Types::Integer;
+  end TemperatureSensor;
+
+  device LCDDisplay
+    features
+      display_in: in data port Base_Types::String;
+  end LCDDisplay;
+
+  -- ==== THREADS ====
+  thread UserInterfaceControl
+    features
+      beverage_out: out data port Beverage;
+  end UserInterfaceControl;
+
+  thread implementation UserInterfaceControl.impl
+    properties
+      Dispatch_Protocol => Sporadic;
+  end UserInterfaceControl.impl;
+
+  thread BrewingControl
+    features
+      beverage_in: in data port Beverage;
+      water_cmd: out data port Base_Types::Integer;
+      coffee_cmd: out data port Base_Types::Integer;
+      grind_cmd: out data port Base_Types::Integer;
+      milk_cmd: out data port Base_Types::Integer;
+      froth_cmd: out data port Base_Types::Integer;
+      heat_cmd: out data port Base_Types::Integer;
+      display_out: out data port Base_Types::String;
+  end BrewingControl;
+
+  thread implementation BrewingControl.impl
+    properties
+      Dispatch_Protocol => Sporadic;
+  end BrewingControl.impl;
+
+  thread WaterPumpControl
+    features
+      water_cmd: in data port Base_Types::Integer;
+  end WaterPumpControl;
+
+  thread implementation WaterPumpControl.impl
+    properties
+      Dispatch_Protocol => Sporadic;
+  end WaterPumpControl.impl;
+
+  thread CoffeeDispenserControl
+    features
+      coffee_cmd: in data port Base_Types::Integer;
+  end CoffeeDispenserControl;
+
+  thread implementation CoffeeDispenserControl.impl
+    properties
+      Dispatch_Protocol => Sporadic;
+  end CoffeeDispenserControl.impl;
+
+  thread CoffeeGrinderControl
+    features
+      grind_cmd: in data port Base_Types::Integer;
+  end CoffeeGrinderControl;
+
+  thread implementation CoffeeGrinderControl.impl
+    properties
+      Dispatch_Protocol => Sporadic;
+  end CoffeeGrinderControl.impl;
+
+  thread TemperatureControl
+    features
+      heat_cmd: in data port Base_Types::Integer;
+      temp_in: in data port Base_Types::Integer;
+  end TemperatureControl;
+
+  thread implementation TemperatureControl.impl
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 500ms;
+  end TemperatureControl.impl;
+
+  thread MilkDispenserControl
+    features
+      milk_cmd: in data port Base_Types::Integer;
+  end MilkDispenserControl;
+
+  thread implementation MilkDispenserControl.impl
+    properties
+      Dispatch_Protocol => Sporadic;
+  end MilkDispenserControl.impl;
+
+  thread MilkFrotherControl
+    features
+      froth_cmd: in data port Base_Types::Integer;
+  end MilkFrotherControl;
+
+  thread implementation MilkFrotherControl.impl
+    properties
+      Dispatch_Protocol => Sporadic;
+  end MilkFrotherControl.impl;
+
+  -- ==== PROCESSES ====
+  process MainProcess
+    features
+      temp_sensor_in: in data port Base_Types::Integer;
+  end MainProcess;
+
+  process implementation MainProcess.impl
+    subcomponents
+      ui: thread UserInterfaceControl.impl;
+      brew: thread BrewingControl.impl;
+      water_pump: thread WaterPumpControl.impl;
+      coffee_dispenser: thread CoffeeDispenserControl.impl;
+      coffee_grinder: thread CoffeeGrinderControl.impl;
+      temp_control: thread TemperatureControl.impl;
+      milk_dispenser: thread MilkDispenserControl.impl;
+      milk_frother: thread MilkFrotherControl.impl;
+    connections
+      -- Connections between BrewingControl and actuator control threads
+      w_cmd: port brew.water_cmd -> water_pump.water_cmd;
+      c_cmd: port brew.coffee_cmd -> coffee_dispenser.coffee_cmd;
+      g_cmd: port brew.grind_cmd -> coffee_grinder.grind_cmd;
+      h_cmd: port brew.heat_cmd -> temp_control.heat_cmd;
+      m_cmd: port brew.milk_cmd -> milk_dispenser.milk_cmd;
+      f_cmd: port brew.froth_cmd -> milk_frother.froth_cmd;
+      temp_feedback: port temp_sensor_in -> temp_control.temp_in;
+  end MainProcess.impl;
+
+  -- ==== PROCESSOR ====
+  processor MainController end MainController;
+
+  -- ==== MEMORY ====
+  memory SystemMemory end SystemMemory;
+
+  -- ==== BUS ====
+  bus DataBus end DataBus;
+
+  -- ==== SYSTEM ====
+  system CoffeeMachineSystem end CoffeeMachineSystem;
+
+  system implementation CoffeeMachineSystem.impl
+    subcomponents
+      main_proc: process MainProcess.impl;
+      cpu: processor MainController;
+      mem: memory SystemMemory;
+      -- Devices
+      pump: device WaterPump;
+      dispenser: device CoffeeDispenser;
+      grinder: device CoffeeGrinder;
+      milk_disp: device MilkDispenser;
+      frother: device MilkFrother;
+      heater: device Heater;
+      temp_sensor: device TemperatureSensor;
+      display: device LCDDisplay;
+    connections
+      temp_link: port temp_sensor.temp_out -> main_proc.temp_sensor_in;
+  end CoffeeMachineSystem.impl;
+
+end coffee_machine;
