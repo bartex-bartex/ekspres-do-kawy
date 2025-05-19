@@ -3,7 +3,7 @@
 ## Autorzy
 
 - Bartosz Warchoł, bwarchol@student.agh.edu.pl
-- Piotr Waluszek, [email]
+- Piotr Waluszek, waluszekp@student.agh.edu.pl
 
 ## Opis projektu
 
@@ -51,7 +51,9 @@ Ekspres do kawy to system czasu rzeczywistego zaprojektowany w języku AADL, kt�
 ### Urządzenia
 
 - **WaterPump** – pompa wody.
-- **Heater** – podgrzewacz wody/mleka.
+- **MilkPump** - pompa mleka.
+- **WaterHeater** – podgrzewacz wody.
+- **MilkHeater** – podgrzewacz mleka.
 - **CoffeeDispenser** – dozownik kawy.
 - **CoffeeGrinder** - młynek do kawy.
 - **MilkDispenser** – dozownik mleka.
