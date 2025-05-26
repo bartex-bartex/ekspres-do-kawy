@@ -1,85 +1,100 @@
-# Ekspres do Kawy – Projekt systemu czasu rzeczywistego w języku AADL
+# Coffee Machine – Real-Time System Design in AADL
 
-## Autorzy
+## Authors
 
-- Bartosz Warchoł, bwarchol@student.agh.edu.pl
+- Bartosz Warchoł, bwarchol@student.agh.edu.pl  
 - Piotr Waluszek, waluszekp@student.agh.edu.pl
 
-## Opis projektu
+## Project Description
 
-Ekspres do kawy to system czasu rzeczywistego zaprojektowany w języku AADL, którego celem jest umożliwienie użytkownikowi przygotowania różnych rodzajów kawy. System zarządza poborem wody, kawy i mleka, procesem spieniania mleka, mieleniem kawy oraz kontrolą temperatury.
+The coffee machine is a real-time system designed in the AADL language, aimed at enabling the user to prepare various types of coffee. The system manages the intake of water, coffee, and milk, the milk frothing process, grinding coffee beans, and temperature control.
 
-## Komponenty systemu
+## System Components
 
-### Pakiet
+### Package
 
-- **CoffeeMachine** – główny pakiet integrujący wszystkie komponenty systemu ekspresu do kawy.
+- **CoffeeMachine** – the main package integrating all system components.
 
-### Data
+### Main Systems
+| System Name               | Description                                     |
+|--------------------------|--------------------------------------------------|
+| `CoffeeProductionSystem` | Top-level system integrating all subsystems     |
+| `CoffeeMachineSystem`    | Subsystem: Handles coffee production and brewing           |
+| `IO_monitoringSystem`    | Subsystem: Manages sensors and user interface              |
 
-- **Beverage** – parametry napoju: ilość kawy, wody, mleka, opcje spienienia, temperatura, moc kawy, gęstość pianki mlecznej.
+### Processors
+| Processor Name    | Description                              | System                   |
+|------------------|------------------------------------------|--------------------------|
+| `MainController` | Main CPU for CoffeeMachineSystem         | CoffeeMachineSystem     |
+| `IOController` | Main CPU for IO_monitoringSystem         | IO_monitoringSystem     |
+| `BrewingController` | Top-level CPU for overall coordination   | CoffeeProductionSystem  |
 
-    - **CoffeeType** - typ kawy (Espresso, Cappuccino, Latte, Czarna)
-    - **CoffeeAmount** – ilość kawy.
-    - **CoffeeStrength** – moc kawy (lekka, średnia, mocna).
-    - **FoamDensity** – gęstość pianki (lekka, gęsta).
+### Buses
+| Bus Name    | Description                                          |
+|-------------|------------------------------------------------------|
+| `MainDataBus`   | Main system bus connecting components                |
+| `DataBusBrewing`   | Local bus for CoffeeMachineSystem                   |
+| `DataBusIO`   | Local bus for IO_monitoringSystem                   |
 
-### Wątki
+### Memory
+| Memory Name     | Description                                     |
+|-----------------|------------------------------------------------|
+| `SystemMemory`  | Shared memory for all system components         |
 
-- **UserInterfaceControl** – Obsługuje interfejs użytkownika, umożliwiając wyświetlanie parametrów napoju oraz interakcję użytkownika z systemem.
-  
-- **BrewingControl** – Zarządza całym procesem parzenia kawy, uwzględniając indywidualne parametry napoju, takie jak ilość kawy, wody, mleka, siła kawy i gęstość pianki.
+## Devices
 
-- **WaterPumpControl** – Odpowiada za kontrolowanie pompy wody, zapewniając odpowiednią ilość wody do procesu parzenia zgodnie z ustawieniami użytkownika.
+| Device              | Description                          |
+|---------------------|--------------------------------------|
+| `AmountSensor`      | Measures coffee quantity.            |
+| `TemperatureSensor` | Measures temperature.                |
+| `WaterPump`         | Controls water flow.                 |
+| `MilkPump`          | Controls milk flow.                  |
+| `CoffeeDispenser`   | Dispenses brewed coffee.             |
+| `CoffeeGrinder`     | Activates the coffee grinder.        |
+| `MilkDispenser`     | Dispenses milk.                      |
+| `MilkFrother`       | Froths the milk.                     |
+| `WaterHeater`       | Heats water.                         |
+| `MilkHeater`        | Heats milk.                          |
+| `LCDDisplay`        | Displays messages to the user.       |
 
-- **CoffeeDispenserControl** – Zarządza dozownikiem kawy.
+## Threads
 
-- **CoffeeGrinderControl** – Odpowiada za mielenie kawy.
+| Thread                   | Description                                                    |
+|--------------------------|----------------------------------------------------------------|
+| `AmountControl`          | Processes data from `AmountSensor`.                            |
+| `TempControl`            | Processes data from `TemperatureSensor`.                       |
+| `WaterPumpControl`       | Controls the `WaterPump`.                                      |
+| `MilkPumpControl`        | Controls the `MilkPump`.                                       |
+| `WaterHeaterControl`     | Controls the `WaterHeater`.                                    |
+| `MilkHeaterControl`      | Controls the `MilkHeater`.                                     |
+| `CoffeeDispenserControl` | Controls the `CoffeeDispenser`.                                |
+| `CoffeeGrinderControl`   | Controls the `CoffeeGrinder`.                                  |
+| `MilkDispenserControl`   | Controls the `MilkDispenser`.                                  |
+| `MilkFrotherControl`     | Controls the `MilkFrother`.                                    |
+| `IngredientsControl`     | Maps beverage requirements to actuator commands.               |
+| `DispenseControl`        | Coordinates final dispensing of milk and coffee.               |
+| `BrewingControl`         | Handles top-level beverage preparation and display output.     |
+| `TemperatureControl`     | Periodically evaluates and controls temperature regulation.     |
 
-- **TemperatureControl** – Kontroluje temperaturę wody.
+## Processes
 
-- **MilkDispenserControl** – Zarządza dozownikiem mleka.
+| Process              | Role                                     |
+|----------------------|------------------------------------------|
+| `SensorDataProcess`  | Acquires and formats sensor input.       |
+| `BrewingProcess`     | Main logic for coffee beverage preparation. |
 
-- **MilkFrotherControl** – Odpowiada za kontrolowanie procesu spieniania mleka.
+## System Features
 
-### Procesy
+- **Support for multiple beverage types** – espresso, latte, cappuccino, and customizable strength and milk foam density.
+- **Parameter personalization** – water amount, coffee amount, milk amount, temperature, frothing option, coffee strength, foam density.
+- **Monitoring** – water level, milk level, temperature.
 
-- **MainProcess** – główny proces zarządzający wszystkimi wątkami i logiką ekspresu.
-- **BrewingProcess** – proces zarządzający sekwencją parzenia.
-- **SensorDataProcess** – proces kontrolujący dane z czujników i dbający o bezpieczeństwo całego procesu
+## Images
 
-### Urządzenia
+### System Overview
+![Big Picture View](big_picture.svg)
+*High-level architecture diagram showing main system components and their interactions*
 
-- **WaterPump** – pompa wody.
-- **MilkPump** - pompa mleka.
-- **WaterHeater** – podgrzewacz wody.
-- **MilkHeater** – podgrzewacz mleka.
-- **CoffeeDispenser** – dozownik kawy.
-- **CoffeeGrinder** - młynek do kawy.
-- **MilkDispenser** – dozownik mleka.
-- **MilkFrother** – spieniacz mleka.
-- **TemperatureSensor** – czujnik temperatury.
-- **LCDDisplay** – wyświetlacz LCD.
-
-### Magistrale
-
-- **DataBus** – magistrala przesyłająca dane pomiędzy komponentami.
-
-### Procesory
-
-- **MainController** – główny procesor sterujący ekspresu.
-
-### Pamięć
-
-- **SystemMemory** – pamięć operacyjna ekspresu.
-
-### System
-
-- **CoffeeMachineSystem** – kompletny system integrujący wszystkie komponenty.
-
-## Funkcjonalności systemu
-
-- **Obsługa wielu rodzajów napojów** – espresso, latte, cappuccino, oraz możliwość dostosowania siły kawy i gęstości pianki.
-- **Personalizacja parametrów** – ilość wody, kawy, mleka, temperatura, opcja spienienia, siła kawy i gęstość pianki.
-- **Monitorowanie** – poziom wody, poziom mleka, temperatura.
-- **Wyświetlanie komunikatów** – komunikaty statusu, ostrzeżenia, przypomnienia o konserwacji.
+### Detailed System Architecture
+![Full System View](full_view.svg)
+*Detailed view of all system components including threads, processes, buses, and data flows*
