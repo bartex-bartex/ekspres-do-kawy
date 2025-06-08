@@ -98,3 +98,45 @@ The coffee machine is a real-time system designed in the AADL language, aimed at
 ### Detailed System Architecture
 ![Full System View](full_view.svg)
 *Detailed view of all system components including threads, processes, buses, and data flows*
+
+## Weight Analysis
+
+The following image shows the weight totals report for the coffee machine system components. The analysis confirms that the sum of weights for the `CoffeeProductionSystem_impl_Instance` (11.840 kg) is below the specified weight limit of 12.000 kg, with a 1.3% weight slack. All individual components are also within their respective weight limits.
+
+A detailed breakdown of the weight analysis is provided in the table below:
+
+| Component Name                            | Actual Weight (kg) | Weight Limit (kg) | Weight Slack (%) |
+|-------------------------------------------|--------------------|-------------------|------------------|
+| `main_bus`                                | 0.030              | 0.050             | 40.0             |
+| `water_tank`                              | 0.300              | 2.000             | 85.0             |
+| `milk_tank`                               | 0.200              | 1.000             | 80.0             |
+| `coffee_container`                        | 0.150              | 0.500             | 70.0             |
+| `drip_tray`                               | 0.250              | 0.800             | 68.8             |
+| `housing`                                 | 3.000              | N/A               | N/A              |
+| `main_memory`                             | 0.010              | 0.020             | 50.0             |
+| `main_cpu`                                | 0.050              | 0.100             | 50.0             |
+| `sys_bus` (within `CoffeeMachineSystem`)   | 0.030              | 0.050             | 40.0             |
+| `water_pump`                              | 0.800              | 1.000             | 20.0             |
+| `milk_pump`                               | 0.500              | 0.700             | 28.6             |
+| `coffee_dispenser`                        | 0.200              | 0.300             | 33.3             |
+| `grinder`                                 | 1.800              | 2.200             | 18.2             |
+| `milk_dispenser`                          | 0.150              | 0.250             | 40.0             |
+| `frother`                                 | 0.400              | 0.600             | 33.3             |
+| `milk_heater`                             | 1.200              | 1.500             | 20.0             |
+| `water_heater`                            | 2.500              | 3.000             | 16.7             |
+| `cpu` (within `CoffeeMachineSystem`)      | 0.050              | 0.100             | 50.0             |
+| `coffee_machine` (System Instance)        | 7.630              | 10.000            | 23.7             |
+| `sys_bus` (within `IO_monitoringSystem`)   | 0.030              | 0.050             | 40.0             |
+| `temp_sensor`                             | 0.010              | 0.030             | 66.7             |
+| `amount_sensor`                           | 0.030              | 0.050             | 40.0             |
+| `display`                                 | 0.100              | 0.150             | 33.3             |
+| `cpu` (within `IO_monitoringSystem`)      | 0.050              | 0.100             | 50.0             |
+| `io_monitoring` (System Instance)         | 0.220              | 1.000             | 78.0             |
+| **`CoffeeProductionSystem_impl_Instance`**| **11.840**         | **12.000**        | **1.3**          |
+
+
+In the table above:
+-   **`coffee_machine`**: This refers to an instance of the `CoffeeMachineSystem.impl`. It represents the core subsystem responsible for the actual coffee brewing process, including components like the water pump, milk pump, grinder, heaters, and their associated control logic and CPU. Its calculated weight is 7.630 kg, well within its defined limit of 10.000 kg.
+-   **`CoffeeProductionSystem_impl_Instance`**: This is the top-level instance representing the entire assembled coffee maker. It encompasses the `coffee_machine` subsystem, the `io_monitoring` subsystem (for sensors and display), shared components like the `main_bus`, `main_cpu`, and `main_memory`, as well as physical parts like the `water_tank`, `milk_tank`, `coffee_container`, `drip_tray`, and `housing`. The total weight of 11.840 kg for the entire system is the sum of all these constituent parts, and it successfully meets the overall system weight limit of 12.000 kg.
+
+![Weight Totals Report](weight_analysis.png)
