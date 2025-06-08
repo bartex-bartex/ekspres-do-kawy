@@ -1,0 +1,516 @@
+package coffee_machine_weight_analysis
+public
+  with Base_Types;
+  with Data_Model;
+  with SEI;
+  
+  data Beverage
+    properties
+      Data_Model::Data_Representation => Struct;
+  end Beverage;
+
+  data CoffeeType
+    properties
+      Data_Model::Data_Representation => Enum;
+  end CoffeeType;
+
+  data CoffeeAmount
+    properties
+      Data_Model::Data_Representation => Integer;
+  end CoffeeAmount;
+
+  data CoffeeStrength
+    properties
+      Data_Model::Data_Representation => Enum;
+  end CoffeeStrength;
+
+  data FoamDensity
+    properties
+      Data_Model::Data_Representation => Enum;
+  end FoamDensity;
+
+  device AmountSensor
+    features
+      amount_out: out data port Base_Types::Integer;
+      bus_access: requires bus access DataBus;
+    properties
+      SEI::GrossWeight => 0.03 kg;
+      SEI::WeightLimit => 0.05 kg;
+  end AmountSensor;
+  
+  device TemperatureSensor
+    features
+      temp_out: out data port Base_Types::Integer;
+      bus_access: requires bus access DataBus;
+    properties
+      SEI::GrossWeight => 0.01 kg;
+      SEI::WeightLimit => 0.03 kg;
+  end TemperatureSensor;
+  
+  device WaterPump
+    features
+      water_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 0.8 kg;
+      SEI::WeightLimit => 1.0 kg;
+  end WaterPump;
+  
+  device MilkPump
+    features
+      milk_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 0.5 kg;
+      SEI::WeightLimit => 0.7 kg;
+  end MilkPump;
+
+  device CoffeeDispenser
+    features
+      coffee_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 0.2 kg;
+      SEI::WeightLimit => 0.3 kg;
+  end CoffeeDispenser;
+
+  device CoffeeGrinder
+    features
+      grind_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 1.8 kg;
+      SEI::WeightLimit => 2.2 kg;
+  end CoffeeGrinder;
+
+  device MilkDispenser
+    features
+      milk_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 0.15 kg;
+      SEI::WeightLimit => 0.25 kg;
+  end MilkDispenser;
+
+  device MilkFrother
+    features
+      froth_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 0.4 kg;
+      SEI::WeightLimit => 0.6 kg;
+  end MilkFrother;
+
+  device WaterHeater
+    features
+      heat_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 2.5 kg;
+      SEI::WeightLimit => 3.0 kg;
+  end WaterHeater;
+  
+  device MilkHeater
+    features
+      heat_cmd: in data port Base_Types::Boolean;
+    properties
+      SEI::GrossWeight => 1.2 kg;
+      SEI::WeightLimit => 1.5 kg;
+  end MilkHeater;
+
+  device LCDDisplay
+    features
+      display_in: in data port Base_Types::String;
+      beverage_out: out data port Beverage;
+      bus_access: requires bus access DataBus;
+    properties
+      SEI::GrossWeight => 0.1 kg;
+      SEI::WeightLimit => 0.15 kg;
+  end LCDDisplay;
+
+  thread AmountControl
+    features
+      amount_in: in data port Base_Types::Integer;
+  end AmountControl;
+  
+  thread implementation AmountControl.impl
+  end AmountControl.impl;
+  
+  thread TempControl
+    features
+      temp_in: in data port Base_Types::Integer;
+  end TempControl;
+  
+  thread implementation TempControl.impl
+  end TempControl.impl;
+
+  thread BrewingControl
+    features
+      beverage_in: in data port Beverage;
+      water_cmd: out data port Base_Types::Integer;
+      coffee_cmd: out data port Base_Types::Integer;
+      grind_cmd: out data port Base_Types::Integer;
+      milk_cmd: out data port Base_Types::Integer;
+      froth_cmd: out data port Base_Types::Integer;
+      heat_cmd: out data port Base_Types::Integer;
+      display_out: out data port Base_Types::String;
+  end BrewingControl;
+
+  thread implementation BrewingControl.impl
+  end BrewingControl.impl;
+
+  thread WaterPumpControl
+    features
+      water_cmd: in data port Base_Types::Boolean;
+      water_out_cmd: out data port Base_Types::Boolean;
+  end WaterPumpControl;
+
+  thread implementation WaterPumpControl.impl
+  end WaterPumpControl.impl;
+
+  thread MilkPumpControl
+    features
+      milk_cmd: in data port Base_Types::Boolean;
+      milk_out_cmd: out data port Base_Types::Boolean;
+  end MilkPumpControl;
+
+  thread implementation MilkPumpControl.impl
+  end MilkPumpControl.impl;
+
+  thread CoffeeDispenserControl
+    features
+      coffee_cmd: in data port Base_Types::Integer;
+      coffee_out_cmd: out data port Base_Types::Boolean;
+  end CoffeeDispenserControl;
+
+  thread implementation CoffeeDispenserControl.impl
+  end CoffeeDispenserControl.impl;
+
+  thread CoffeeGrinderControl
+    features
+      grind_cmd: in data port Base_Types::Boolean;
+      grind_out_cmd: out data port Base_Types::Boolean;
+  end CoffeeGrinderControl;
+
+  thread implementation CoffeeGrinderControl.impl
+  end CoffeeGrinderControl.impl;
+
+  thread TemperatureControl
+    features
+      heat_cmd: in data port Base_Types::Integer;
+      temp_in: in data port Base_Types::Integer;
+  end TemperatureControl;
+
+  thread implementation TemperatureControl.impl
+  end TemperatureControl.impl;
+
+  thread MilkDispenserControl
+    features
+      milk_cmd: in data port Base_Types::Integer;
+      milk_out_cmd: out data port Base_Types::Boolean;
+  end MilkDispenserControl;
+
+  thread implementation MilkDispenserControl.impl
+  end MilkDispenserControl.impl;
+
+  thread MilkFrotherControl
+    features
+      froth_cmd: in data port Base_Types::Boolean;
+      froth_out_cmd: out data port Base_Types::Boolean;
+  end MilkFrotherControl;
+
+  thread implementation MilkFrotherControl.impl
+  end MilkFrotherControl.impl;
+
+  thread IngredientsControl
+    features
+      sensors_data_in: in data port Base_Types::Integer;
+      beverage_parameters_in: in data port Beverage;
+      
+      water_pump_out: out data port Base_Types::Boolean;
+      milk_pump_out: out data port Base_Types::Boolean;
+      water_heater_out: out data port Base_Types::Boolean;
+      milk_heater_out: out data port Base_Types::Boolean;
+      coffee_grinder_out: out data port Base_Types::Boolean;
+      milk_frother_out: out data port Base_Types::Boolean;
+      
+      milk_ready: out data port Base_Types::Boolean;
+      coffee_ready: out data port Base_Types::Boolean;
+  end IngredientsControl;
+  
+  thread implementation IngredientsControl.impl
+  end IngredientsControl.impl;
+
+  thread MilkHeaterControl
+    features
+      milk_cmd: in data port Base_Types::Boolean;
+      milk_out_cmd: out data port Base_Types::Boolean;
+  end MilkHeaterControl;
+
+  thread implementation MilkHeaterControl.impl
+  end MilkHeaterControl.impl;
+
+  thread WaterHeaterControl
+    features
+      water_cmd: in data port Base_Types::Boolean;
+      water_out_cmd: out data port Base_Types::Boolean;
+  end WaterHeaterControl;
+
+  thread implementation WaterHeaterControl.impl
+  end WaterHeaterControl.impl;
+
+  thread DispenseControl
+    features
+      milk_ready: in data port Base_Types::Boolean;
+      coffee_ready: in data port Base_Types::Boolean;
+      
+      milk_cmd: out data port Base_Types::Integer;
+      coffee_cmd: out data port Base_Types::Integer;
+  end DispenseControl;
+
+  thread implementation DispenseControl.impl
+  end DispenseControl.impl;
+
+  process SensorDataProcess
+    features
+      amount_sensor_in: in data port Base_Types::Integer;
+      temp_sensor_in: in data port Base_Types::Integer;
+      out_sensors: out data port Base_Types::Integer;
+  end SensorDataProcess;
+  
+  process implementation SensorDataProcess.impl
+    subcomponents
+      amount_control: thread AmountControl.impl;
+      temp_control: thread TempControl.impl;
+    connections
+      amount_sensor_th: port amount_sensor_in -> amount_control.amount_in;
+      temp_senor_th: port temp_sensor_in -> temp_control.temp_in;
+  end SensorDataProcess.impl;
+  
+  process BrewingProcess
+    features
+      sensors_data_in: in data port Base_Types::Integer;
+      beverage_params_in: in data port Beverage;
+      
+      water_pump_out: out data port Base_Types::Boolean;
+      milk_pump_out: out data port Base_Types::Boolean;
+      
+      water_heater_out: out data port Base_Types::Boolean;
+      milk_heater_out: out data port Base_Types::Boolean;
+      coffee_grinder_out: out data port Base_Types::Boolean;
+      milk_frother_out: out data port Base_Types::Boolean;
+      
+      milk_dispenser_out: out data port Base_Types::Boolean;
+      coffee_dispenser_out: out data port Base_Types::Boolean;
+      
+      lcd_display_out: out data port Base_Types::Boolean;
+  end BrewingProcess;
+  
+  process implementation BrewingProcess.impl
+    subcomponents
+      ingredients_control: thread IngredientsControl.impl;
+      
+      water_pump_control: thread WaterPumpControl.impl;
+      milk_pump_control: thread MilkPumpControl.impl;
+      water_heater_control: thread WaterHeaterControl.impl;
+      milk_heater_control: thread MilkHeaterControl.impl;
+      coffee_grinder_control: thread CoffeeGrinderControl.impl;
+      milk_frother_control: thread MilkFrotherControl.impl;
+      
+      dispense_control: thread DispenseControl.impl;
+      milk_dispenser_control: thread MilkDispenserControl.impl;
+      coffee_dispenser_control: thread CoffeeDispenserControl.impl;
+    connections
+      ing_water_pump_control_conn: port ingredients_control.water_pump_out -> water_pump_control.water_cmd;
+      ing_milk_pump_control_conn: port ingredients_control.milk_pump_out -> milk_pump_control.milk_cmd;
+      ing_water_heater_control_conn: port ingredients_control.water_heater_out -> water_heater_control.water_cmd;
+      ing_milk_heater_control_conn: port ingredients_control.milk_heater_out -> milk_heater_control.milk_cmd;
+      ing_coffee_grinder_control_conn: port ingredients_control.coffee_grinder_out -> coffee_grinder_control.grind_cmd;
+      ing_froth_frother_control_conn: port ingredients_control.milk_frother_out -> milk_frother_control.froth_cmd;
+      
+      sensors_data_ing_sensors_data_conn: port sensors_data_in -> ingredients_control.sensors_data_in;
+      beverage_ing_beverage_conn: port beverage_params_in -> ingredients_control.beverage_parameters_in;
+      
+      water_pump_to_out_conn: port water_pump_control.water_out_cmd -> water_pump_out;
+      milk_pump_to_out_conn: port milk_pump_control.milk_out_cmd -> milk_pump_out;
+      water_heater_to_out_conn: port water_heater_control.water_out_cmd -> water_heater_out;
+      milk_heater_to_out_conn: port milk_heater_control.milk_out_cmd -> milk_heater_out;
+      coffee_grinder_to_out_conn: port coffee_grinder_control.grind_out_cmd -> coffee_grinder_out;
+      milk_frother_to_out_conn: port milk_frother_control.froth_out_cmd -> milk_frother_out;
+      milk_dispenser_to_out_conn: port milk_dispenser_control.milk_out_cmd -> milk_dispenser_out;
+      coffee_dispenser_to_out_conn: port coffee_dispenser_control.coffee_out_cmd -> coffee_dispenser_out;
+      
+      ingredients_milk_ready_conn: port ingredients_control.milk_ready -> dispense_control.milk_ready;
+      ingredients_coffee_ready_conn: port ingredients_control.coffee_ready -> dispense_control.coffee_ready;
+  
+      dispense_to_milk_disp_ctrl_conn: port dispense_control.milk_cmd -> milk_dispenser_control.milk_cmd;
+      dispense_to_coffee_disp_ctrl_conn: port dispense_control.coffee_cmd -> coffee_dispenser_control.coffee_cmd;
+  end BrewingProcess.impl;
+
+  processor MainController 
+    features
+      eth: requires bus access DataBus;
+    properties
+      SEI::GrossWeight => 0.05 kg;
+      SEI::WeightLimit => 0.1 kg;
+  end MainController;
+  
+  processor implementation MainController.impl
+  end MainController.impl;
+
+  memory SystemMemory 
+    properties
+      SEI::GrossWeight => 0.01 kg;
+      SEI::WeightLimit => 0.02 kg;
+  end SystemMemory;
+
+  bus DataBus
+    features
+      eth: requires bus access DataBus;
+      main_access: provides bus access DataBus;
+    properties
+      SEI::GrossWeight => 0.03 kg;
+      SEI::WeightLimit => 0.05 kg;
+  end DataBus;
+
+  system CoffeeMachineSystem
+    features
+      sensors_data_in: in data port Base_Types::Integer;
+      beverage_params_in: in data port Beverage;
+      bus_access: requires bus access DataBus;
+    properties
+      SEI::WeightLimit => 10.0 kg;
+  end CoffeeMachineSystem;
+  
+  system implementation CoffeeMachineSystem.impl
+    subcomponents
+      cpu: processor MainController;
+      sys_bus: bus DataBus;
+      Brewing_pr: process BrewingProcess.impl;
+        
+      water_pump: device WaterPump;
+      milk_pump: device MilkPump;
+      coffee_dispenser: device CoffeeDispenser;
+      grinder: device CoffeeGrinder;
+      milk_dispenser: device MilkDispenser;
+      frother: device MilkFrother;
+      milk_heater: device MilkHeater;
+      water_heater: device WaterHeater;
+    connections
+      Brewing_to_water_pump_conn: port Brewing_pr.water_pump_out -> water_pump.water_cmd;
+      Brewing_to_milk_pump_conn: port Brewing_pr.milk_pump_out -> milk_pump.milk_cmd;
+      Brewing_to_grinder_conn: port Brewing_pr.coffee_grinder_out -> grinder.grind_cmd;
+      Brewing_to_frother_conn: port Brewing_pr.milk_frother_out -> frother.froth_cmd;
+      Brewing_to_milk_heater_conn: port Brewing_pr.milk_heater_out -> milk_heater.heat_cmd;
+      Brewing_to_water_heater_conn: port Brewing_pr.water_heater_out -> water_heater.heat_cmd;
+      Brewing_to_milk_dispenser_conn: port Brewing_pr.milk_dispenser_out -> milk_dispenser.milk_cmd;
+      Brewing_to_coffee_dispenser_conn: port Brewing_pr.coffee_dispenser_out -> coffee_dispenser.coffee_cmd;
+      
+      bus_connection: bus access cpu.eth -> sys_bus;
+      
+      brewing_sensor_conn: port sensors_data_in -> Brewing_pr.sensors_data_in;
+      brewing_beverage_conn: port beverage_params_in -> Brewing_pr.beverage_params_in;
+    properties
+      Actual_Processor_Binding => (reference(cpu)) applies to Brewing_pr;
+      Actual_Connection_Binding => (reference(sys_bus)) applies to brewing_sensor_conn;
+      Actual_Connection_Binding => (reference(sys_bus)) applies to brewing_beverage_conn;
+  end CoffeeMachineSystem.impl;
+
+  system IO_monitoringSystem
+    features
+      sensors_data_out: out data port Base_Types::Integer;
+      beverage_params_out: out data port Beverage;
+      bus_access: requires bus access DataBus;
+    properties
+      SEI::WeightLimit => 1.0 kg;
+  end IO_monitoringSystem;
+
+  system implementation IO_monitoringSystem.impl
+    subcomponents
+      cpu: processor MainController;
+      sys_bus: bus DataBus;
+      SensorsData_pr: process SensorDataProcess.impl;
+      temp_sensor: device TemperatureSensor;
+      amount_sensor: device AmountSensor;
+      display: device LCDDisplay;
+    connections
+      temp_bus: bus access sys_bus -> temp_sensor.bus_access;
+      amount_bus: bus access sys_bus -> amount_sensor.bus_access;
+      display_bus: bus access sys_bus -> display.bus_access;
+      
+      temp_sensor_SensorsData_pr_conn: port temp_sensor.temp_out -> SensorsData_pr.temp_sensor_in {
+        Actual_Connection_Binding => (reference(sys_bus));
+      };
+      amount_sensor_SensorsData_pr_conn: port amount_sensor.amount_out -> SensorsData_pr.amount_sensor_in {
+        Actual_Connection_Binding => (reference(sys_bus));
+      };
+      
+      sensors_out_conn: port SensorsData_pr.out_sensors -> sensors_data_out;
+      beverage_out_conn: port display.beverage_out -> beverage_params_out;
+      
+      bus_connection: bus access cpu.eth -> sys_bus;
+    properties
+      Actual_Processor_Binding => (reference(cpu)) applies to SensorsData_pr;
+      Actual_Connection_Binding => (reference(sys_bus)) applies to sensors_out_conn;
+      Actual_Connection_Binding => (reference(sys_bus)) applies to beverage_out_conn;
+  end IO_monitoringSystem.impl;
+
+  device WaterTank
+    properties
+      SEI::GrossWeight => 0.3 kg;
+      SEI::WeightLimit => 2.0 kg;
+  end WaterTank;
+  
+  device MilkTank
+    properties
+      SEI::GrossWeight => 0.2 kg;
+      SEI::WeightLimit => 1.0 kg;
+  end MilkTank;
+  
+  device CoffeeBeanContainer
+    properties
+      SEI::GrossWeight => 0.15 kg;
+      SEI::WeightLimit => 0.5 kg;
+  end CoffeeBeanContainer;
+  
+  device DripTray
+    properties
+      SEI::GrossWeight => 0.25 kg;
+      SEI::WeightLimit => 0.8 kg;
+  end DripTray;
+  
+  device Housing
+    properties
+      SEI::GrossWeight => 3.0 kg;
+  end Housing;
+
+  system CoffeeProductionSystem 
+    properties
+      SEI::WeightLimit => 12.0 kg;
+  end CoffeeProductionSystem;
+
+  system implementation CoffeeProductionSystem.impl
+    subcomponents
+      coffee_machine: system CoffeeMachineSystem.impl;
+      io_monitoring: system IO_monitoringSystem.impl;
+      main_bus: bus DataBus;
+      main_cpu: processor MainController;
+      main_memory: memory SystemMemory;
+      
+      water_tank: device WaterTank;
+      milk_tank: device MilkTank;
+      coffee_container: device CoffeeBeanContainer;
+      drip_tray: device DripTray;
+      housing: device Housing;
+    connections
+      monitoring_to_machine_sensors: port io_monitoring.sensors_data_out -> coffee_machine.sensors_data_in {
+        Actual_Connection_Binding => (reference(main_bus));
+      };
+      monitoring_to_machine_beverage: port io_monitoring.beverage_params_out -> coffee_machine.beverage_params_in {
+        Actual_Connection_Binding => (reference(main_bus));
+      };
+      
+      main_cpu_bus: bus access main_cpu.eth -> main_bus.main_access;
+      coffee_bus_conn: bus access main_bus.main_access -> coffee_machine.bus_access;
+      monitoring_bus_conn: bus access main_bus.main_access -> io_monitoring.bus_access;
+    properties
+      Actual_Processor_Binding => (reference(main_cpu)) applies to coffee_machine;
+      Actual_Processor_Binding => (reference(main_cpu)) applies to io_monitoring;
+      Actual_Memory_Binding => (reference(main_memory)) applies to coffee_machine;
+      Actual_Memory_Binding => (reference(main_memory)) applies to io_monitoring;
+  end CoffeeProductionSystem.impl;
+
+end coffee_machine_weight_analysis;
