@@ -164,6 +164,34 @@ In the table above:
 
 ![Weight Totals Report](weight_analysis.png)
 
+## System Analysis Reports
+
+### ARINC429 Connection Consistency
+The system includes verification of ARINC429 bus connections to ensure proper data communication between avionics components. This analysis validates that all ARINC429 channels are correctly configured and connected according to the system architecture requirements.
+
+![ARINC429 Connection Consistency Report](arinc429_consistency.png)
+
+### Port Connection Consistency
+Port connection analysis verifies that all component ports are properly connected and that data flows match the intended system design. This ensures that:
+- All required ports have corresponding connections
+- Data types between connected ports are compatible
+- No orphaned or dangling connections exist
+- Bidirectional connections are properly established
+
+![Port Connection Consistency Report](port_consistency.png)
+
+### Binding Constraints Verification
+The binding constraints check validates that all software components are properly bound to their respective hardware resources. This analysis confirms that:
+- Threads are correctly bound to processors
+- Processes are mapped to appropriate memory segments
+- Bus access requirements are satisfied
+- No resource conflicts exist
+
+The successful verification with "No problems found" indicates that the system's resource allocation is correct and all components have been properly assigned to their target hardware platforms.
+
+![Check Binding Constraints](binding_constraints.png)
+
+
 ## Bibliography
 
 [1] SAE International, "AS5506C: Architecture Analysis & Design Language (AADL)," SAE International Standard, 2017. Available: https://www.sae.org/standards/content/as5506c/
