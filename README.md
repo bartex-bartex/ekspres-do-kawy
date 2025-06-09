@@ -166,13 +166,17 @@ In the table above:
 
 ## Bibliography
 
-[1] SAE International, "AS5506C: Architecture Analysis & Design Language (AADL)," SAE International Standard, 2017.
+[1] SAE International, "AS5506C: Architecture Analysis & Design Language (AADL)," SAE International Standard, 2017. Available: https://www.sae.org/standards/content/as5506c/
 
-[2] P. H. Feiler and D. P. Gluch, *Model-Based Engineering with AADL: An Introduction to the SAE Architecture Analysis & Design Language*, Addison-Wesley Professional, 2012.
+[2] P. H. Feiler and D. P. Gluch, *Model-Based Engineering with AADL: An Introduction to the SAE Architecture Analysis & Design Language*, Addison-Wesley Professional, 2012. ISBN: 978-0321888945
 
-[3] J. Hugues and F. Singhoff, "Developing Critical Embedded Systems with AADL: A Practical Introduction," in *Embedded Real-Time Systems*, Wiley-ISTE, 2014.
+[3] J. Hugues and F. Singhoff, "Developing Critical Embedded Systems with AADL: A Practical Introduction," in *Embedded Real-Time Systems*, Wiley-ISTE, 2014. Available: https://doi.org/10.1002/9781118569535.ch5
 
-[4] P. H. Feiler, D. P. Gluch, and J. J. Hudak, "The Architecture Analysis & Design Language (AADL): An Introduction," Technical Note CMU/SEI-2006-TN-011, Carnegie Mellon University, 2006.
+[4] P. H. Feiler, D. P. Gluch, and J. J. Hudak, "The Architecture Analysis & Design Language (AADL): An Introduction," Technical Note CMU/SEI-2006-TN-011, Carnegie Mellon University, 2006. Available: https://resources.sei.cmu.edu/library/asset-view.cfm?assetid=7879
+
+[5] AADL Community Resources and Examples. Available: https://github.com/osate
+
+[6] OSATE 2 - Open Source AADL Tool Environment. Available: https://osate.org/
 
 ## License
 
