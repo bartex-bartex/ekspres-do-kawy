@@ -9,6 +9,29 @@
 
 The coffee machine is a real-time system designed in the AADL language, aimed at enabling the user to prepare various types of coffee. The system manages the intake of water, coffee, and milk, the milk frothing process, grinding coffee beans, and temperature control.
 
+### Project Goals
+
+The main objective of this project was to model a coffee machine system using AADL to demonstrate:
+- Component-based architecture design for embedded systems
+- Real-time system modeling with proper separation of hardware and software components
+- Weight analysis and resource management in AADL
+- Integration of sensors, actuators, and control logic
+
+### System Architecture
+
+The system is organized into three main levels:
+1. **Top-level system** (`CoffeeProductionSystem`) - coordinates the entire coffee making process
+2. **Coffee Machine subsystem** (`CoffeeMachineSystem`) - handles the actual beverage preparation including heating, grinding, and dispensing
+3. **I/O Monitoring subsystem** (`IO_monitoringSystem`) - manages user interface and sensor data acquisition
+
+Each subsystem has its own processor and local bus, connected through a main system bus. This modular approach allows for independent development and testing of subsystems while maintaining clear interfaces between components.
+
+### Key Functionalities
+
+The coffee machine supports preparation of three main beverage types (espresso, latte, cappuccino) with customizable parameters. The system monitors critical parameters such as water and milk levels, temperature, and coffee amount to ensure safe and proper operation. All actuators (pumps, heaters, grinder, frother) are controlled through dedicated threads that process sensor data and execute brewing sequences.
+
+The AADL model includes weight properties for all physical components, ensuring the final design meets the 12 kg weight constraint with appropriate safety margins.
+
 ## System Components
 
 ### Package
@@ -140,3 +163,13 @@ In the table above:
 -   **`CoffeeProductionSystem_impl_Instance`**: This is the top-level instance representing the entire assembled coffee maker. It encompasses the `coffee_machine` subsystem, the `io_monitoring` subsystem (for sensors and display), shared components like the `main_bus`, `main_cpu`, and `main_memory`, as well as physical parts like the `water_tank`, `milk_tank`, `coffee_container`, `drip_tray`, and `housing`. The total weight of 11.840 kg for the entire system is the sum of all these constituent parts, and it successfully meets the overall system weight limit of 12.000 kg.
 
 ![Weight Totals Report](weight_analysis.png)
+
+## Bibliography
+
+[1] SAE International, "AS5506C: Architecture Analysis & Design Language (AADL)," SAE International Standard, 2017.
+
+[2] P. H. Feiler and D. P. Gluch, *Model-Based Engineering with AADL: An Introduction to the SAE Architecture Analysis & Design Language*, Addison-Wesley Professional, 2012.
+
+[3] J. Hugues and F. Singhoff, "Developing Critical Embedded Systems with AADL: A Practical Introduction," in *Embedded Real-Time Systems*, Wiley-ISTE, 2014.
+
+[4] P. H. Feiler, D. P. Gluch, and J. J. Hudak, "The Architecture Analysis & Design Language (AADL): An Introduction," Technical Note CMU/SEI-2006-TN-011, Carnegie Mellon University, 2006.
